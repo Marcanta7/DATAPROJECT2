@@ -10,11 +10,10 @@ En este repositorio, se encuentra la solución en Google Cloud que hemos diseña
 2. Dataflow para transformación de los mensajes
 
 3. BigQuery como almacenamiento
-4. https://github.com/Marcanta7/DATAPROJECT2/blob/main/Arquitectura_DP2.png
 
-5. Cloud functions para avisos
+4. Cloud functions para avisos
 
-6. Tableau para visualización
+5. Tableau para visualización
 
 
 ## Diseño de la arquitectura
@@ -24,4 +23,37 @@ https://github.com/Marcanta7/DATAPROJECT2/blob/847560ba424ae6f959c462c2fda5a98fa
 
 ## PUB/SUB
 
-Para simular las entradas de voluntarios y afectados hemos creado un scrip de python donde generamos dentro de unos parametros registrados y controlados, de forma aleatoria cada pocos segundos alertas tanto de voluntarios como de afectados las cuales se envian a dos topicos distintos de Pub/Sub. Además hemos querido realizar una UI con Streamlit donde se representaria de manera mas acertada lo que seria
+Para simular las entradas de voluntarios y afectados hemos creado un scrip de python donde generamos dentro de unos parametros registrados y controlados, de forma aleatoria cada pocos segundos alertas tanto de voluntarios como de afectados las cuales se envian a dos topicos distintos de Pub/Sub. Además hemos querido realizar una UI con Streamlit donde se representaria de manera mas acertada lo que seria el ingreso de datos y la experiencia de Usuario. Estos datos ingresados se transfieren a Pub/Sub al igual que lo hacen los que generamos nosotros.
+
+## DATAFLOW
+El pipeline realiza las siguientes tareas:
+
+# 1. Lectura de datos desde Pub/Sub
+
+Se reciben mensajes JSON desde dos suscripciones de Pub/Sub: afectados y voluntarios.
+
+Se decodifican los mensajes y se les asigna un tipo (affected o volunteer).
+
+Se incrementa un contador processed para rastrear cuántas veces se ha intentado emparejar un registro.
+
+Se agrupan los datos por clave (city, necessity, disponibility).
+
+# Emparejamiento de afectados y voluntarios
+
+Se comparan los datos agrupados.
+
+Si hay coincidencia entre un afectado y un voluntario, se genera un registro matched.
+
+Si no hay coincidencias, el afectado o voluntario no emparejado se marca como non_matched.
+
+# Almacenamiento en BigQuery
+
+Los registros emparejados (matched) se guardan en la tabla de BigQuery matched_table.
+
+Los registros no emparejados (unmatched) se guardan en la tabla unmatched_table si han alcanzado el límite de intentos de emparejamiento.
+
+# Reenvío de no emparejados a Pub/Sub
+
+Si un afectado o voluntario no ha sido emparejado después de 7 intentos, se almacena en BigQuery.
+
+Si tiene menos de 7 intentos, se reenvía al tema de Pub/Sub correspondiente para reintentar su emparejamiento en el siguiente ciclo del pipeline.
