@@ -28,7 +28,7 @@ Para simular las entradas de voluntarios y afectados hemos creado un scrip de py
 ## DATAFLOW
 El pipeline realiza las siguientes tareas:
 
-# 1. Lectura de datos desde Pub/Sub
+### 1. Lectura de datos desde Pub/Sub
 
 Se reciben mensajes JSON desde dos suscripciones de Pub/Sub: afectados y voluntarios.
 
@@ -38,7 +38,7 @@ Se incrementa un contador processed para rastrear cuántas veces se ha intentado
 
 Se agrupan los datos por clave (city, necessity, disponibility).
 
-# Emparejamiento de afectados y voluntarios
+### Emparejamiento de afectados y voluntarios
 
 Se comparan los datos agrupados.
 
@@ -46,14 +46,31 @@ Si hay coincidencia entre un afectado y un voluntario, se genera un registro mat
 
 Si no hay coincidencias, el afectado o voluntario no emparejado se marca como non_matched.
 
-# Almacenamiento en BigQuery
+### Almacenamiento en BigQuery
 
 Los registros emparejados (matched) se guardan en la tabla de BigQuery matched_table.
 
 Los registros no emparejados (unmatched) se guardan en la tabla unmatched_table si han alcanzado el límite de intentos de emparejamiento.
 
-# Reenvío de no emparejados a Pub/Sub
+### Reenvío de no emparejados a Pub/Sub
 
 Si un afectado o voluntario no ha sido emparejado después de 7 intentos, se almacena en BigQuery.
 
 Si tiene menos de 7 intentos, se reenvía al tema de Pub/Sub correspondiente para reintentar su emparejamiento en el siguiente ciclo del pipeline.
+
+## CONFIGURACION
+El script obtiene las configuraciones de GCP desde variables de entorno:
+
+export PROJECT_ID=<your-gcp-project>
+export AFFECTED_SUB=<affected-subscription>
+export VOLUNTEER_SUB=<volunteer-subscription>
+export VOLUNTEER_TOPIC=<volunteer-topic>
+export AFFECTED_TOPIC=<affected-topic>
+export BQ_DATASET=<bigquery-dataset>
+export MATCHED_TABLE=<matched-table>
+export UNMATCHED_TABLE=<unmatched-table>
+export TEMP_LOCATION=<gs://your-temp-bucket>
+export STAGING_LOCATION=<gs://your-staging-bucket>
+export REGION=<gcp-region>
+
+
