@@ -10,10 +10,11 @@ En este repositorio, se encuentra la solución en Google Cloud que hemos diseña
 2. Dataflow para transformación de los mensajes
 
 3. BigQuery como almacenamiento
+4. https://github.com/Marcanta7/DATAPROJECT2/blob/main/Arquitectura_DP2.png
 
-4. Cloud functions para avisos
+5. Cloud functions para avisos
 
-5. Tableau para visualización
+6. Tableau para visualización
 
 
 ## Diseño de la arquitectura
@@ -21,3 +22,6 @@ Nuestra arquitectura se representa de la manera siguiente:
 
 https://github.com/Marcanta7/DATAPROJECT2/blob/847560ba424ae6f959c462c2fda5a98fa136123e/Arquitectura_DP2.png
 
+## PUB/SUB
+
+Para simular las entradas de voluntarios y afectados hemos creado un scrip de python donde generamos dentro de unos parametros registrados y controlados, de forma aleatoria cada pocos segundos alertas tanto de voluntarios como de afectados las cuales se envian a dos topicos distintos de Pub/Sub. Además hemos querido realizar una UI con Streamlit donde se representaria de manera mas acertada lo que seria
