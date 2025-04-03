@@ -19,5 +19,5 @@ En este repositorio, se encuentra la solución en Google Cloud que hemos diseña
 ## Diseño de la arquitectura
 Nuestra arquitectura se representa de la manera siguiente:
 
-
+https://github.com/Marcanta7/DATAPROJECT2/blob/847560ba424ae6f959c462c2fda5a98fa136123e/Arquitectura_DP2.png
 
