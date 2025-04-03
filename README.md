@@ -60,7 +60,7 @@ Si tiene menos de 7 intentos, se reenvía al tema de Pub/Sub correspondiente par
 
 ## CONFIGURACION
 El script obtiene las configuraciones de GCP desde variables de entorno:
-
+'''
 export PROJECT_ID=<your-gcp-project>
 export AFFECTED_SUB=<affected-subscription>
 export VOLUNTEER_SUB=<volunteer-subscription>
@@ -72,5 +72,5 @@ export UNMATCHED_TABLE=<unmatched-table>
 export TEMP_LOCATION=<gs://your-temp-bucket>
 export STAGING_LOCATION=<gs://your-staging-bucket>
 export REGION=<gcp-region>
-
+'''
 
